@@ -8,23 +8,26 @@ import PropTypes from 'prop-types';
 import moment from "moment";
 import {CirclePicker} from 'react-color';
 
-import './create-task.scss';
+import './manage-event.scss';
 
 
-interface CreateEventProps {
+interface ManageEventProps {
   show: boolean;
   handleClose: Function;
   create: Function;
+  update: Function;
   dayOfMonth: number;
   month: number;
   year: number;
+  mode: 'create' | 'edit';
 }
 
 const DEFAULT_EVENT_COLOR = '#f44336';
 
-const CreateEvent = ({show, handleClose, create, dayOfMonth, month, year}: CreateEventProps) => {
+const ManageEvent = ({show, handleClose, create, update, dayOfMonth, month, year, mode}: ManageEventProps) => {
   const [validated, setValidated] = useState(false);
   const [color, setColor] = useState('');
+  const isEdit = mode === 'edit';
   let formRef: any = null;
 
   const handleSubmit = (event?: any) => {
@@ -41,12 +44,19 @@ const CreateEvent = ({show, handleClose, create, dayOfMonth, month, year}: Creat
       const timeParts = time.split(':').map(p => Number.parseInt(p));
       const date = moment().year(year).month(month).date(dayOfMonth).hours(timeParts[0]).minutes(timeParts[1]).seconds(0);
 
-      create({
-        description,
-        city,
-        color,
-        date
-      });
+      isEdit ? update({
+          description,
+          city,
+          color,
+          date
+        }) :
+        create({
+          description,
+          city,
+          color,
+          date
+        });
+
       handleClose();
     }
 
@@ -54,9 +64,10 @@ const CreateEvent = ({show, handleClose, create, dayOfMonth, month, year}: Creat
   };
 
   return (
-    <Modal className="create-event" show={show} onHide={() => handleClose()}>
+    <Modal className="manage-event" show={show} onHide={() => handleClose()}>
       <Modal.Header closeButton>
-        <Modal.Title>Create Event for {show && moment().year(year).month(month).date(dayOfMonth).format('LL')}</Modal.Title>
+        <Modal.Title>{isEdit ? 'Edit' : 'Create'} event
+          for {moment().year(year).month(month).date(dayOfMonth).format('LL')}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Form ref={(ref: any) => {
@@ -68,17 +79,17 @@ const CreateEvent = ({show, handleClose, create, dayOfMonth, month, year}: Creat
           </Form.Group>
           <Form.Group controlId="formBasicTime">
             <Form.Label>Time</Form.Label>
-            <Form.Control required name="time" type="time" />
+            <Form.Control required name="time" type="time"/>
           </Form.Group>
           <Form.Group controlId="formCity">
             <Form.Label>City</Form.Label>
-            <Form.Control required name="city" type="text" />
+            <Form.Control required name="city" type="text"/>
           </Form.Group>
           <Form.Group controlId="formColor">
             <Form.Label>Color</Form.Label>
-            <Form.Control value={color} name="color" type="hidden" />
+            <Form.Control value={color} name="color" type="hidden"/>
             <div className="color-picker">
-              <CirclePicker onChangeComplete={color => setColor(color.hex)} />
+              <CirclePicker onChangeComplete={color => setColor(color.hex)}/>
             </div>
           </Form.Group>
         </Form>
@@ -100,7 +111,7 @@ const CreateEvent = ({show, handleClose, create, dayOfMonth, month, year}: Creat
 const mapStateToProps = ({events: {selectedMonth, selectedDay, selectedYear}}) => {
   return {
     dayOfMonth: selectedDay,
-    month:Number.parseInt(selectedMonth) - 1,
+    month: Number.parseInt(selectedMonth) - 1,
     year: Number.parseInt(selectedYear)
   }
 };
@@ -109,11 +120,14 @@ const mapDispatchToProp = (dispatch: Dispatch) => {
   return {
     create: (event: CalendarEvent) => {
       dispatch(EventActions.serviceCreateEvent(event));
+    },
+    update: (event: CalendarEvent) => {
+      dispatch(EventActions.serviceUpdateEvent(event));
     }
   }
 };
 
-CreateEvent.propType = {
+ManageEvent.propType = {
   show: PropTypes.bool.isRequired,
   handleClose: PropTypes.func.isRequired,
   dayOfMonth: PropTypes.number,
@@ -121,4 +135,4 @@ CreateEvent.propType = {
   year: PropTypes.number
 };
 
-export default connect(mapStateToProps, mapDispatchToProp)(CreateEvent);
+export default connect(mapStateToProps, mapDispatchToProp)(ManageEvent);

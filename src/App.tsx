@@ -6,7 +6,7 @@ import Calendar from "./components/calendar/calendar";
 import CalendarActions from "./actions/CalendarActions";
 import moment, {Moment} from "moment";
 import EventsPopover from "./components/events-popover/events-popover";
-import CreateEvent from "./components/create-event/create-event";
+import CreateEvent from "./components/manage-event/manage-event";
 import EventActions from "./actions/EventActions";
 import {CalendarEvent} from "./types";
 
@@ -54,10 +54,12 @@ export function App({currentDate, setCurrentDate, hideCreateNewEvent, showCreate
         </Row>
         <Row>
           <Col md={{span: 4, offset: 4}}>
-            <CreateEvent
+            {showCreateEvent && <CreateEvent
+              mode="create"
               handleClose={() => hideCreateNewEvent()}
               show={showCreateEvent}
             />
+            }
           </Col>
         </Row>
         <Row>
