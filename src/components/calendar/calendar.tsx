@@ -1,11 +1,12 @@
 import React from 'react';
-import moment, {MomentInput} from 'moment';
-import {IoIosArrowBack, IoIosArrowForward} from 'react-icons/io'
+import moment, {Moment, MomentInput} from 'moment';
+import {IoIosArrowBack, IoIosArrowForward} from 'react-icons/io';
+import PropTypes from 'prop-types';
 
 import './calendar.scss';
 
 const getDates = (startDate: MomentInput, stopDate: MomentInput) => {
-  const dateArray = [];
+  const dateArray: string[] = [];
   let currentDate = moment(startDate);
   while (currentDate <= moment(stopDate)) {
     dateArray.push(moment(currentDate).format("YYYY"));
@@ -57,8 +58,8 @@ const MonthList = (props: any) => {
   );
 };
 
-const YearTable = ({year, onYearSelected}: any) => {
-  const rows = [];
+const YearTable = ({year, onYearSelected}) => {
+  const rows: any[] = [];
   let cells: any[] = [];
   const nextEleven = moment()
     .set("year", year)
@@ -108,30 +109,45 @@ const YearTable = ({year, onYearSelected}: any) => {
   );
 };
 
-class Calendar extends React.Component {
+interface CalendarProps {
+  currentDate: Moment
+  onPrev?: Function,
+  onNext?: Function,
+  onYearChange?: Function,
+  onMonthChange?: Function
+}
+
+class Calendar extends React.Component<CalendarProps> {
+  static propTypes = {
+    currentDate: PropTypes.object.isRequired,
+    onPrev: PropTypes.func,
+    onNext: PropTypes.func,
+    onYearChange: PropTypes.func,
+    onMonthChange: PropTypes.func
+  };
+
   state = {
     showYearTable: false,
     showMonthTable: false,
     showDateTable: true,
-    currentDate: moment(),
     allMonths: moment.months(),
     selectedDay: null
   };
 
   daysInMonth = () => {
-    return this.state.currentDate.daysInMonth();
+    return this.props.currentDate.daysInMonth();
   };
 
   currentYear = () => {
-    return this.state.currentDate.format("Y");
+    return this.props.currentDate.format("Y");
   };
 
   currentDay = () => {
-    return Number.parseInt(this.state.currentDate.format("D"));
+    return Number.parseInt(this.props.currentDate.format("D"));
   };
 
   firstDayOfMonth = () => {
-    let dateObject = this.state.currentDate;
+    let dateObject = this.props.currentDate;
 
     return Number.parseInt(moment(dateObject)
       .startOf("month")
@@ -139,22 +155,11 @@ class Calendar extends React.Component {
   };
 
   month = () => {
-    return this.state.currentDate.format("MMMM");
+    return this.props.currentDate.format("MMMM");
   };
 
   showMonth = () => {
     this.setState({
-      showMonthTable: !this.state.showMonthTable,
-      showDateTable: !this.state.showDateTable
-    });
-  };
-
-  setMonth = (month: string) => {
-    const monthNo = this.state.allMonths.indexOf(month);
-    let currentDate = {...this.state.currentDate};
-    currentDate = moment(currentDate).set("month", monthNo);
-    this.setState({
-      currentDate,
       showMonthTable: !this.state.showMonthTable,
       showDateTable: !this.state.showDateTable
     });
@@ -167,25 +172,20 @@ class Calendar extends React.Component {
     });
   };
 
-  onPrev = () => {
-    this.setState({
-      currentDate: this.state.currentDate.subtract(1, this.state.showYearTable ? "year" : "month")
-    });
-  };
-
-  onNext = () => {
-    this.setState({
-      currentDate: this.state.currentDate.add(1, this.state.showYearTable ? "year" : "month")
-    });
-  };
-
   setYear = (year: number) => {
-    let currentDate = {...this.state.currentDate};
-    currentDate = moment(currentDate).set("year", year);
+    this.props.onYearChange && this.props.onYearChange(year);
     this.setState({
-      currentDate,
       showMonthTable: !this.state.showMonthTable,
       showYearTable: !this.state.showYearTable
+    });
+  };
+
+  setMonth = (month: string) => {
+    const monthNo = this.state.allMonths.indexOf(month);
+    this.props.onMonthChange && this.props.onMonthChange(monthNo);
+    this.setState({
+      showMonthTable: !this.state.showMonthTable,
+      showDateTable: !this.state.showDateTable
     });
   };
 
@@ -207,12 +207,12 @@ class Calendar extends React.Component {
   }
 
   render() {
-    const firstBlanks = [];
-    const lastBlanks = [];
-    const daysInMonth = [];
+    const firstBlanks: any[] = [];
+    const lastBlanks: any[] = [];
+    const daysInMonth: any[] = [];
     const rows: any[] = [];
     let cells: any[] = [];
-    const daysInPreviousMonth = moment().month(this.state.currentDate.month() - 1).daysInMonth();
+    const daysInPreviousMonth = moment().month(this.props.currentDate.month() - 1).daysInMonth();
 
     for (let i = 0; i < this.firstDayOfMonth(); i++) {
       firstBlanks.push(<td key={`${i}-empty`} className="calendar-day empty">{daysInPreviousMonth - (this.firstDayOfMonth() - i - 1)}</td>);
@@ -263,7 +263,7 @@ class Calendar extends React.Component {
           <span className="calendar-button button-prev">
             <IoIosArrowBack
               onClick={() => {
-                this.onPrev();
+                this.props.onPrev && this.props.onPrev(this.state.showYearTable);
               }}
             />
           </span>
@@ -283,7 +283,7 @@ class Calendar extends React.Component {
           <span className="calendar-button button-next">
             <IoIosArrowForward
               onClick={() => {
-                this.onNext();
+                this.props.onNext && this.props.onNext(this.state.showYearTable);
               }}
             />
           </span>

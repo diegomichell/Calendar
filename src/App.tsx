@@ -1,26 +1,68 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import {Col, Container, Navbar, Row} from "react-bootstrap";
+import {connect} from "react-redux";
+import {Dispatch} from "redux";
+import Calendar from "./components/calendar/calendar";
+import CalendarActions from "./actions/CalendarActions";
+import moment, {Moment} from "moment";
 
-function App() {
+interface AppProps {
+  currentDate: Moment,
+  setCurrentDate: (date: Moment) => void
+}
+
+export function App({currentDate, setCurrentDate}: AppProps) {
+  const onPrev = (showYearTable) => {
+    setCurrentDate(moment({...currentDate}).subtract(1, showYearTable ? "year" : "month"));
+  };
+
+  const onNext = (showYearTable) => {
+    setCurrentDate(moment({...currentDate}).add(1, showYearTable ? "year" : "month"));
+  };
+
+  const onYearChange= (year) => {
+    setCurrentDate( moment({...currentDate}).set("year", year));
+  };
+
+  const onMonthChange= (monthNo) => {
+    setCurrentDate(moment({...currentDate}).set("month", monthNo));
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Navbar bg="light" expand="lg">
+        <Navbar.Brand href="/">Calendar App</Navbar.Brand>
+      </Navbar>
+      <Container className="mt-5">
+        <h3 className="text-center mb-4">Calendar App <small>By Diego Michel</small></h3>
+        <Row>
+          <Col md={{span: 8, offset: 2}}>
+            <Calendar
+              currentDate={currentDate}
+              onPrev={onPrev}
+              onNext={onNext}
+              onYearChange={onYearChange}
+              onMonthChange={onMonthChange}
+            />
+          </Col>
+        </Row>
+      </Container>
     </div>
   );
 }
 
-export default App;
+const mapStateToProps = ({calendar: {currentDate}}) => {
+  return {
+    currentDate
+  }
+};
+
+const mapDispatchToProp = (dispatch: Dispatch) => {
+  return {
+    setCurrentDate(date: Moment) {
+      dispatch(CalendarActions.setCurrentDate(date));
+    }
+  }
+};
+
+export default connect(mapStateToProps, mapDispatchToProp)(App);
