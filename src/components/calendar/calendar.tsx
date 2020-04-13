@@ -2,6 +2,7 @@ import React from 'react';
 import moment, {Moment, MomentInput} from 'moment';
 import {IoIosArrowBack, IoIosArrowForward} from 'react-icons/io';
 import PropTypes from 'prop-types';
+import {OverlayTrigger} from "react-bootstrap";
 
 import './calendar.scss';
 
@@ -114,7 +115,8 @@ interface CalendarProps {
   onPrev?: Function,
   onNext?: Function,
   onYearChange?: Function,
-  onMonthChange?: Function
+  onMonthChange?: Function,
+  renderOnDaySelected?: Function
 }
 
 class Calendar extends React.Component<CalendarProps> {
@@ -123,19 +125,23 @@ class Calendar extends React.Component<CalendarProps> {
     onPrev: PropTypes.func,
     onNext: PropTypes.func,
     onYearChange: PropTypes.func,
-    onMonthChange: PropTypes.func
+    onMonthChange: PropTypes.func,
+    renderOnDaySelected: PropTypes.func
   };
 
   state = {
     showYearTable: false,
     showMonthTable: false,
     showDateTable: true,
-    allMonths: moment.months(),
-    selectedDay: null
+    allMonths: moment.months()
   };
 
   daysInMonth = () => {
     return this.props.currentDate.daysInMonth();
+  };
+
+  currentMonth = () => {
+    return this.props.currentDate.format("M");
   };
 
   currentYear = () => {
@@ -189,17 +195,6 @@ class Calendar extends React.Component<CalendarProps> {
     });
   };
 
-  onDayClick = (d: number) => {
-    this.setState(
-      {
-        selectedDay: d
-      },
-      () => {
-        console.log("SELECTED DAY: ", this.state.selectedDay);
-      }
-    );
-  };
-
   renderWeekDays() {
     return moment.weekdaysShort().map(day => {
       return <th key={day}>{day}</th>;
@@ -207,6 +202,7 @@ class Calendar extends React.Component<CalendarProps> {
   }
 
   render() {
+    const {renderOnDaySelected} = this.props;
     const firstBlanks: any[] = [];
     const lastBlanks: any[] = [];
     const daysInMonth: any[] = [];
@@ -215,20 +211,20 @@ class Calendar extends React.Component<CalendarProps> {
     const daysInPreviousMonth = moment().month(this.props.currentDate.month() - 1).daysInMonth();
 
     for (let i = 0; i < this.firstDayOfMonth(); i++) {
-      firstBlanks.push(<td key={`${i}-empty`} className="calendar-day empty">{daysInPreviousMonth - (this.firstDayOfMonth() - i - 1)}</td>);
+      firstBlanks.push(
+        <td key={`${i}-empty`}
+            className="calendar-day empty">{daysInPreviousMonth - (this.firstDayOfMonth() - i - 1)}</td>
+      );
     }
 
     for (let d = 1; d <= this.daysInMonth(); d++) {
       let currentDay = d === this.currentDay() ? "today" : "";
       daysInMonth.push(
         <td key={d} className={`calendar-day ${currentDay}`}>
-          <span
-            onClick={() => {
-              this.onDayClick(d);
-            }}
-          >
-            {d}
-          </span>
+          <OverlayTrigger flip={true} trigger="focus" placement="bottom"
+                          overlay={renderOnDaySelected && renderOnDaySelected(d, this.currentMonth(), this.currentYear())}>
+            <span tabIndex={0}>{d}</span>
+          </OverlayTrigger>
         </td>
       );
     }

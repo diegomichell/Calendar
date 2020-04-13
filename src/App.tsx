@@ -1,17 +1,22 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {Col, Container, Navbar, Row} from "react-bootstrap";
 import {connect} from "react-redux";
 import {Dispatch} from "redux";
 import Calendar from "./components/calendar/calendar";
 import CalendarActions from "./actions/CalendarActions";
 import moment, {Moment} from "moment";
+import EventsPopover from "./components/events-popover/events-popover";
+import CreateEvent from "./components/create-event/create-event";
+import EventActions from "./actions/EventActions";
 
 interface AppProps {
-  currentDate: Moment,
-  setCurrentDate: (date: Moment) => void
+  currentDate: Moment;
+  setCurrentDate: (date: Moment) => void;
+  hideCreateNewEvent: () => void;
+  showCreateEvent: boolean;
 }
 
-export function App({currentDate, setCurrentDate}: AppProps) {
+export function App({currentDate, setCurrentDate, hideCreateNewEvent, showCreateEvent}: AppProps) {
   const onPrev = (showYearTable) => {
     setCurrentDate(moment({...currentDate}).subtract(1, showYearTable ? "year" : "month"));
   };
@@ -20,11 +25,11 @@ export function App({currentDate, setCurrentDate}: AppProps) {
     setCurrentDate(moment({...currentDate}).add(1, showYearTable ? "year" : "month"));
   };
 
-  const onYearChange= (year) => {
-    setCurrentDate( moment({...currentDate}).set("year", year));
+  const onYearChange = (year) => {
+    setCurrentDate(moment({...currentDate}).set("year", year));
   };
 
-  const onMonthChange= (monthNo) => {
+  const onMonthChange = (monthNo) => {
     setCurrentDate(moment({...currentDate}).set("month", monthNo));
   };
 
@@ -35,6 +40,24 @@ export function App({currentDate, setCurrentDate}: AppProps) {
       </Navbar>
       <Container className="mt-5">
         <h3 className="text-center mb-4">Calendar App <small>By Diego Michel</small></h3>
+        <Row className="mb-4">
+          <Col md={{span: 4, offset: 4}}>
+            <div className="instructions">
+              <h4 className="text-center text-success">Instructions</h4>
+              <ul className="list-group list-unstyled text-center">
+                <li className="text-danger">👍🏻 Click on a day to add an event reminder</li>
+              </ul>
+            </div>
+          </Col>
+        </Row>
+        <Row>
+          <Col md={{span: 4, offset: 4}}>
+            <CreateEvent
+              handleClose={() => hideCreateNewEvent()}
+              show={showCreateEvent}
+            />
+          </Col>
+        </Row>
         <Row>
           <Col md={{span: 8, offset: 2}}>
             <Calendar
@@ -43,6 +66,7 @@ export function App({currentDate, setCurrentDate}: AppProps) {
               onNext={onNext}
               onYearChange={onYearChange}
               onMonthChange={onMonthChange}
+              renderOnDaySelected={EventsPopover}
             />
           </Col>
         </Row>
@@ -51,9 +75,10 @@ export function App({currentDate, setCurrentDate}: AppProps) {
   );
 }
 
-const mapStateToProps = ({calendar: {currentDate}}) => {
+const mapStateToProps = ({calendar: {currentDate}, events: {show_create_new_event_modal}}) => {
   return {
-    currentDate
+    currentDate,
+    showCreateEvent: show_create_new_event_modal
   }
 };
 
@@ -61,6 +86,9 @@ const mapDispatchToProp = (dispatch: Dispatch) => {
   return {
     setCurrentDate(date: Moment) {
       dispatch(CalendarActions.setCurrentDate(date));
+    },
+    hideCreateNewEvent() {
+      dispatch(EventActions.hideCreateNewEvent());
     }
   }
 };

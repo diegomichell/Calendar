@@ -129,8 +129,14 @@
   color: #3296c8;
 }
 
-.calendar .calendar-date table tbody tr > *:not(.empty):hover {
-  font-weight: bold;
+.calendar .calendar-date table tbody tr > *:not(.empty) {
+  span {
+    padding: 5px;
+  }
+
+  &:hover {
+    font-weight: bold;
+  }
 }
 
 .calendar .calendar-date table tbody tr > *.empty {
