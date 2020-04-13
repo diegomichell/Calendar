@@ -12,5 +12,19 @@ export default {
 
       resolve(createdEvent)
     });
+  },
+  removeEvents: (eventsObject): Promise<void> => {
+    return new Promise((resolve) => {
+      const eventsData = localStorage.getItem('events');
+      const events = eventsData ? JSON.parse(eventsData) : {};
+      const newState = {...events};
+
+      Object.keys(eventsObject).forEach(id => {
+        delete newState[id]
+      });
+
+      localStorage.setItem('events', JSON.stringify(newState));
+      resolve();
+    });
   }
 }

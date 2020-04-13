@@ -8,7 +8,7 @@ import {MdLocationOn} from 'react-icons/md'
 
 import './events-popover.scss';
 
-const EventsPopoverContent = ({dayOfMonth, month, year, showCreateNewEvent, events}) => {
+const EventsPopoverContent = ({dayOfMonth, month, year, showCreateNewEvent, events, removeEventsForDay, removeEvent}) => {
   const eventsForDay = (events as CalendarEvent[] || []).filter(e => {
     return e.date.year() === Number.parseInt(year) && e.date.month() === (Number.parseInt(month) - 1) && e.date.date() === dayOfMonth;
   }).sort((a, b) => a.date > b.date ? 1 : -1);
@@ -19,13 +19,29 @@ const EventsPopoverContent = ({dayOfMonth, month, year, showCreateNewEvent, even
         <Button block size="sm" variant="success" onClick={() => showCreateNewEvent(month, dayOfMonth, year)}>
           New event
         </Button>
+        {
+          eventsForDay.length ?
+            <Button block size="sm" variant="link"
+                    onClick={() => removeEventsForDay(month, dayOfMonth, year)}>
+              clear events
+            </Button>
+            : ''
+        }
       </ListGroupItem>
       {eventsForDay.map(event => {
         return (
-          <ListGroupItem key={event.id} className={"calendar-event-item"} >
-            <span style={{color: event.color}}>Event at {event.date.format('hh:mm a')}</span>
+          <ListGroupItem key={event.id} className={"calendar-event-item"}>
+            <span style={{color: event.color}}>
+              Event at {event.date.format('hh:mm a')}
+            </span>
             <p>{event.description}</p>
             <small>{event.city} <MdLocationOn/></small>
+            <br/>
+            <small>
+              <a href="#" onClick={() => removeEvent(event)}>Edit</a>
+              |
+              <a href="#" onClick={() => removeEvent(event)}>Remove</a>
+            </small>
           </ListGroupItem>
         )
       })}
@@ -43,6 +59,12 @@ const mapDispatchToProp = (dispatch: Dispatch) => {
   return {
     showCreateNewEvent(selectedMonth: number, selectedDay: number, selectedYear: number) {
       dispatch(EventActions.showCreateNewEvent(selectedMonth, selectedDay, selectedYear));
+    },
+    removeEventsForDay(selectedMonth: number, selectedDay: number, selectedYear: number) {
+      dispatch(EventActions.serviceRemoveEventsForDay(selectedMonth, selectedDay, selectedYear));
+    },
+    removeEvent(event: CalendarEvent) {
+      dispatch(EventActions.serviceRemoveEvent(event));
     }
   }
 };

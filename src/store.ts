@@ -28,7 +28,7 @@ export default function configureStore(): Store {
       eventsObject[e.id] = {...e, date: moment(e.date)};
     });
 
-    store.dispatch(EventActions.serviceLoadEvents({...eventsObject}));
+    store.dispatch(EventActions.setEvents({...eventsObject}));
   }
 
   return store;

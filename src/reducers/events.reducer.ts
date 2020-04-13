@@ -10,8 +10,8 @@ const initialState = {
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case ACTION_TYPES.SERVICE_LOAD_EVENTS: {
-      return {...state, events: {...state.events, ...action.payload.events}};
+    case ACTION_TYPES.SET_EVENTS: {
+      return {...state, events: {...action.payload.events}};
     }
     case ACTION_TYPES.CREATE_EVENT: {
       return {...state, events: {...state.events, [action.payload.event.id]: action.payload.event}};
@@ -34,6 +34,16 @@ export default (state = initialState, action) => {
         selectedDay: null,
         selectedYear: null
       };
+    }
+    case ACTION_TYPES.REMOVE_EVENTS: {
+      const {events} = action.payload;
+      const newState = {...state.events};
+
+      Object.keys(events).forEach(id => {
+        delete newState[id]
+      });
+
+      return {...state, events: {...newState}};
     }
     default:
       return state
