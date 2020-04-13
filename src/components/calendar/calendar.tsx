@@ -3,6 +3,7 @@ import moment, {Moment, MomentInput} from 'moment';
 import {IoIosArrowBack, IoIosArrowForward} from 'react-icons/io';
 import PropTypes from 'prop-types';
 import {OverlayTrigger} from "react-bootstrap";
+import {CalendarEvent} from "../../types";
 
 import './calendar.scss';
 
@@ -116,7 +117,8 @@ interface CalendarProps {
   onNext?: Function,
   onYearChange?: Function,
   onMonthChange?: Function,
-  renderOnDaySelected?: Function
+  renderOnDaySelected?: Function,
+  events?: CalendarEvent[]
 }
 
 class Calendar extends React.Component<CalendarProps> {
@@ -126,7 +128,8 @@ class Calendar extends React.Component<CalendarProps> {
     onNext: PropTypes.func,
     onYearChange: PropTypes.func,
     onMonthChange: PropTypes.func,
-    renderOnDaySelected: PropTypes.func
+    renderOnDaySelected: PropTypes.func,
+    events: PropTypes.array
   };
 
   state = {
@@ -202,7 +205,7 @@ class Calendar extends React.Component<CalendarProps> {
   }
 
   render() {
-    const {renderOnDaySelected} = this.props;
+    const {renderOnDaySelected, events} = this.props;
     const firstBlanks: any[] = [];
     const lastBlanks: any[] = [];
     const daysInMonth: any[] = [];
@@ -218,12 +221,19 @@ class Calendar extends React.Component<CalendarProps> {
     }
 
     for (let d = 1; d <= this.daysInMonth(); d++) {
-      let currentDay = d === this.currentDay() ? "today" : "";
+      const firstEventForDay = (events || []).find(e => {
+        return e.date.year() === Number.parseInt(this.currentYear()) && e.date.month() === (Number.parseInt(this.currentMonth()) - 1) && e.date.date() === d;
+      });
+      const eventClass = firstEventForDay ? 'calendar-event' : '';
+      const currentDay = d === this.currentDay() ? "today" : "";
+
       daysInMonth.push(
-        <td key={d} className={`calendar-day ${currentDay}`}>
+        <td key={d} className={`calendar-day ${currentDay} ${eventClass}`}>
           <OverlayTrigger flip={true} trigger="focus" placement="bottom"
                           overlay={renderOnDaySelected && renderOnDaySelected(d, this.currentMonth(), this.currentYear())}>
-            <span tabIndex={0}>{d}</span>
+            <span style={{backgroundColor: firstEventForDay ? firstEventForDay.color: ''}} tabIndex={0}>
+              {d}
+            </span>
           </OverlayTrigger>
         </td>
       );

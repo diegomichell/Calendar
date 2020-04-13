@@ -129,6 +129,13 @@
   color: #3296c8;
 }
 
+.calendar .calendar-date table tbody tr > *.calendar-event {
+  span {
+    border-radius: 8px;
+    color: #fff;
+  }
+}
+
 .calendar .calendar-date table tbody tr > *:not(.empty) {
   span {
     padding: 5px;

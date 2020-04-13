@@ -2,7 +2,7 @@ import ACTION_TYPES from './action-types';
 import {CalendarEvent} from "../types";
 
 export default {
-  serviceLoadEvents: (events: CalendarEvent[]) => {
+  serviceLoadEvents: (events: any) => {
     return {
       type: ACTION_TYPES.SERVICE_LOAD_EVENTS,
       payload: {

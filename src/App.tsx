@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {Col, Container, Navbar, Row} from "react-bootstrap";
 import {connect} from "react-redux";
 import {Dispatch} from "redux";
@@ -8,15 +8,17 @@ import moment, {Moment} from "moment";
 import EventsPopover from "./components/events-popover/events-popover";
 import CreateEvent from "./components/create-event/create-event";
 import EventActions from "./actions/EventActions";
+import {CalendarEvent} from "./types";
 
 interface AppProps {
   currentDate: Moment;
   setCurrentDate: (date: Moment) => void;
   hideCreateNewEvent: () => void;
   showCreateEvent: boolean;
+  events: CalendarEvent[]
 }
 
-export function App({currentDate, setCurrentDate, hideCreateNewEvent, showCreateEvent}: AppProps) {
+export function App({currentDate, setCurrentDate, hideCreateNewEvent, showCreateEvent, events}: AppProps) {
   const onPrev = (showYearTable) => {
     setCurrentDate(moment({...currentDate}).subtract(1, showYearTable ? "year" : "month"));
   };
@@ -67,6 +69,7 @@ export function App({currentDate, setCurrentDate, hideCreateNewEvent, showCreate
               onYearChange={onYearChange}
               onMonthChange={onMonthChange}
               renderOnDaySelected={EventsPopover}
+              events={events}
             />
           </Col>
         </Row>
@@ -75,10 +78,11 @@ export function App({currentDate, setCurrentDate, hideCreateNewEvent, showCreate
   );
 }
 
-const mapStateToProps = ({calendar: {currentDate}, events: {show_create_new_event_modal}}) => {
+const mapStateToProps = ({calendar: {currentDate}, events: {showCreateEvent, events}}) => {
   return {
     currentDate,
-    showCreateEvent: show_create_new_event_modal
+    showCreateEvent,
+    events: Object.values(events) as CalendarEvent[]
   }
 };
 
