@@ -1,4 +1,4 @@
-import {CalendarEvent} from "../types";
+import {CalendarEvent} from '../types';
 
 export default {
   createEvent: (event: CalendarEvent): Promise<CalendarEvent> => {

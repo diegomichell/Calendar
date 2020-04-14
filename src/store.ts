@@ -1,11 +1,11 @@
 import {createStore, applyMiddleware, compose, Store} from 'redux';
 import createSagaMiddleware from 'redux-saga';
-import moment from "moment";
+import moment from 'moment';
 import rootReducer from './reducers';
-import rootSaga from "./sagas";
-import EventActions from "./actions/EventActions";
+import rootSaga from './sagas';
+import EventActions from './actions/EventActions';
 import {composeWithDevTools} from 'redux-devtools-extension';
-import {CalendarEvent} from "./types";
+import {CalendarEvent} from './types';
 
 export default function configureStore(): Store {
   const sagaMiddleware = createSagaMiddleware();

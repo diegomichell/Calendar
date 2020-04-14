@@ -1,10 +1,10 @@
 import React from 'react';
 import {shallow, mount} from 'enzyme';
 import ConnectedManageEvent, {ManageEvent} from './manage-event';
-import {Form} from "react-bootstrap";
-import {Provider} from "react-redux";
-import configureStore from "../../store";
-import EventActions from "../../actions/EventActions";
+import {Form} from 'react-bootstrap';
+import {Provider} from 'react-redux';
+import configureStore from '../../store';
+import EventActions from '../../actions/EventActions';
 
 describe('ManageEvent component', () => {
 
@@ -15,7 +15,7 @@ describe('ManageEvent component', () => {
 
     const app = shallow(
       <ManageEvent
-        mode="create"
+        mode='create'
         create={create}
         dayOfMonth={13}
         month={4}
@@ -36,7 +36,7 @@ describe('ManageEvent component', () => {
 
     const app = mount(
       <ManageEvent
-        mode="create"
+        mode='create'
         create={create}
         dayOfMonth={13}
         month={4}
@@ -51,16 +51,16 @@ describe('ManageEvent component', () => {
     const controls = form.find('input');
     // @ts-ignore
     controls.at(0).instance().value = 'Play soccer';
-    controls.at(0).simulate("change");
+    controls.at(0).simulate('change');
     // @ts-ignore
     controls.at(1).instance().value = '17:00';
-    controls.at(1).simulate("change");
+    controls.at(1).simulate('change');
     // @ts-ignore
     controls.at(2).instance().value = 'Santo Domingo';
-    controls.at(2).simulate("change");
+    controls.at(2).simulate('change');
     // @ts-ignore
     controls.at(3).instance().value = '#fff';
-    controls.at(3).simulate("change");
+    controls.at(3).simulate('change');
 
     form.simulate('submit');
 
@@ -76,7 +76,7 @@ describe('ManageEvent component', () => {
     const app = mount(
       <Provider store={store}>
         <ConnectedManageEvent
-          mode="create"
+          mode='create'
           show={true}
           handleClose={handleClose}
         />
@@ -87,16 +87,16 @@ describe('ManageEvent component', () => {
     const controls = form.find('input');
     // @ts-ignore
     controls.at(0).instance().value = 'Play soccer';
-    controls.at(0).simulate("change");
+    controls.at(0).simulate('change');
     // @ts-ignore
     controls.at(1).instance().value = '17:00';
-    controls.at(1).simulate("change");
+    controls.at(1).simulate('change');
     // @ts-ignore
     controls.at(2).instance().value = 'Santo Domingo';
-    controls.at(2).simulate("change");
+    controls.at(2).simulate('change');
     // @ts-ignore
     controls.at(3).instance().value = '#fff';
-    controls.at(3).simulate("change");
+    controls.at(3).simulate('change');
 
     form.simulate('submit');
 

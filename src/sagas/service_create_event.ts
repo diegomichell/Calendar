@@ -1,6 +1,6 @@
 import {call, put, takeEvery} from 'redux-saga/effects'
 import ActionTypes from '../actions/action-types';
-import EventActions from "../actions/EventActions";
+import EventActions from '../actions/EventActions';
 import EventsService from '../services/events.service';
 
 export function* serviceCreateEvent(action: any) {

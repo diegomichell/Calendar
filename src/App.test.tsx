@@ -1,6 +1,6 @@
 import React from 'react';
 import {render} from '@testing-library/react';
-import moment from "moment";
+import moment from 'moment';
 import {App} from './App';
 
 
@@ -11,7 +11,7 @@ describe('App component', () => {
 
     const app = render(
       <App currentDate={moment()}
-           manageEventMode="create" setCurrentDate={setCurrentDate}
+           manageEventMode='create' setCurrentDate={setCurrentDate}
            hideManageEvent={hideManageEvent}
       />
     );

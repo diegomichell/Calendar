@@ -1,14 +1,14 @@
 import React from 'react';
-import {Col, Container, Navbar, Row} from "react-bootstrap";
-import {connect} from "react-redux";
-import {Dispatch} from "redux";
-import Calendar from "./components/calendar/calendar";
-import CalendarActions from "./actions/CalendarActions";
-import moment, {Moment} from "moment";
-import EventsPopover from "./components/events-popover/events-popover";
-import ManageEvent from "./components/manage-event/manage-event";
-import EventActions from "./actions/EventActions";
-import {CalendarEvent} from "./types";
+import {Col, Container, Navbar, Row} from 'react-bootstrap';
+import {connect} from 'react-redux';
+import {Dispatch} from 'redux';
+import Calendar from './components/calendar/calendar';
+import CalendarActions from './actions/CalendarActions';
+import moment, {Moment} from 'moment';
+import EventsPopover from './components/events-popover/events-popover';
+import ManageEvent from './components/manage-event/manage-event';
+import EventActions from './actions/EventActions';
+import {CalendarEvent} from './types';
 
 interface AppProps {
   currentDate: Moment;
@@ -21,34 +21,34 @@ interface AppProps {
 
 export function App({currentDate, setCurrentDate, hideManageEvent, showManageEvent, events, manageEventMode}: AppProps) {
   const onPrev = (showYearTable) => {
-    setCurrentDate(moment({...currentDate}).subtract(1, showYearTable ? "year" : "month"));
+    setCurrentDate(moment({...currentDate}).subtract(1, showYearTable ? 'year' : 'month'));
   };
 
   const onNext = (showYearTable) => {
-    setCurrentDate(moment({...currentDate}).add(1, showYearTable ? "year" : "month"));
+    setCurrentDate(moment({...currentDate}).add(1, showYearTable ? 'year' : 'month'));
   };
 
   const onYearChange = (year) => {
-    setCurrentDate(moment({...currentDate}).set("year", year));
+    setCurrentDate(moment({...currentDate}).set('year', year));
   };
 
   const onMonthChange = (monthNo) => {
-    setCurrentDate(moment({...currentDate}).set("month", monthNo));
+    setCurrentDate(moment({...currentDate}).set('month', monthNo));
   };
 
   return (
-    <div className="App">
-      <Navbar bg="light" expand="lg">
-        <Navbar.Brand href="/">Calendar App</Navbar.Brand>
+    <div className='App'>
+      <Navbar bg='light' expand='lg'>
+        <Navbar.Brand href='/'>Calendar App</Navbar.Brand>
       </Navbar>
-      <Container className="mt-5">
-        <h3 className="text-center mb-4">Calendar App <small>By Diego Michel</small></h3>
-        <Row className="mb-4">
+      <Container className='mt-5'>
+        <h3 className='text-center mb-4'>Calendar App <small>By Diego Michel</small></h3>
+        <Row className='mb-4'>
           <Col md={{span: 4, offset: 4}}>
-            <div className="instructions">
-              <h4 className="text-center text-success">Instructions</h4>
-              <ul className="list-group list-unstyled text-center">
-                <li className="text-danger"><span role="img" aria-label="thump up">👍🏻</span> Click on a day to add an event reminder</li>
+            <div className='instructions'>
+              <h4 className='text-center text-success'>Instructions</h4>
+              <ul className='list-group list-unstyled text-center'>
+                <li className='text-danger'><span role='img' aria-label='thump up'>👍🏻</span> Click on a day to add an event reminder</li>
               </ul>
             </div>
           </Col>

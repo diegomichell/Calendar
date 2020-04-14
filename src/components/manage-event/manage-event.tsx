@@ -1,11 +1,11 @@
 import React, {useEffect, useState} from 'react';
-import {connect} from "react-redux";
+import {connect} from 'react-redux';
 import {Dispatch} from 'redux';
-import {Button, Form, Modal} from "react-bootstrap";
-import {CalendarEvent} from "../../types";
-import EventActions from "../../actions/EventActions";
+import {Button, Form, Modal} from 'react-bootstrap';
+import {CalendarEvent} from '../../types';
+import EventActions from '../../actions/EventActions';
 import PropTypes from 'prop-types';
-import moment from "moment";
+import moment from 'moment';
 import {CirclePicker} from 'react-color';
 
 import './manage-event.scss';
@@ -71,7 +71,7 @@ export const ManageEvent = ({show, handleClose, create, update, dayOfMonth, mont
   const defaultDate = selectedEvent && moment(selectedEvent.date).date(selectedEvent.date.date());
 
   return (
-    <Modal className="manage-event" show={show} onHide={() => handleClose()}>
+    <Modal className='manage-event' show={show} onHide={() => handleClose()}>
       <Modal.Header closeButton>
         <Modal.Title>{isEdit ? 'Edit' : 'Create'} event
           for {moment().year(year).month(month).date(dayOfMonth).format('LL')}</Modal.Title>
@@ -80,41 +80,41 @@ export const ManageEvent = ({show, handleClose, create, update, dayOfMonth, mont
         <Form ref={(ref: any) => {
           formRef = ref
         }} noValidate validated={validated} onSubmit={handleSubmit}>
-          <Form.Group controlId="formBasicDescription">
+          <Form.Group controlId='formBasicDescription'>
             <Form.Label>Description</Form.Label>
             <Form.Control defaultValue={selectedEvent && selectedEvent.description} maxLength={30} required
-                          name="description" type="text" placeholder="Event description..."/>
+                          name='description' type='text' placeholder='Event description...'/>
           </Form.Group>
           {isEdit && (
-            <Form.Group controlId="formBasicDate">
+            <Form.Group controlId='formBasicDate'>
               <Form.Label>Date</Form.Label>
               <Form.Control defaultValue={defaultDate && defaultDate.toISOString().substring(0, 10)} required
-                            name="date" type="date"/>
+                            name='date' type='date'/>
             </Form.Group>
           )}
-          <Form.Group controlId="formBasicTime">
+          <Form.Group controlId='formBasicTime'>
             <Form.Label>Time</Form.Label>
-            <Form.Control defaultValue={selectedEvent && selectedEvent.date.format('HH:mm')} required name="time"
-                          type="time"/>
+            <Form.Control defaultValue={selectedEvent && selectedEvent.date.format('HH:mm')} required name='time'
+                          type='time'/>
           </Form.Group>
-          <Form.Group controlId="formCity">
+          <Form.Group controlId='formCity'>
             <Form.Label>City</Form.Label>
-            <Form.Control defaultValue={selectedEvent && selectedEvent.city} required name="city" type="text"/>
+            <Form.Control defaultValue={selectedEvent && selectedEvent.city} required name='city' type='text'/>
           </Form.Group>
-          <Form.Group controlId="formColor">
+          <Form.Group controlId='formColor'>
             <Form.Label>Color</Form.Label>
-            <Form.Control value={color} name="color" type="hidden"/>
-            <div className="color-picker">
+            <Form.Control value={color} name='color' type='hidden'/>
+            <div className='color-picker'>
               <CirclePicker color={color} onChangeComplete={color => setColor(color.hex)}/>
             </div>
           </Form.Group>
         </Form>
       </Modal.Body>
       <Modal.Footer>
-        <Button variant="secondary" onClick={() => handleClose()}>
+        <Button variant='secondary' onClick={() => handleClose()}>
           Cancel
         </Button>
-        <Button variant="primary" onClick={() => {
+        <Button variant='primary' onClick={() => {
           handleSubmit();
         }}>
           Save

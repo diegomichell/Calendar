@@ -1,5 +1,5 @@
 import ACTION_TYPES from '../actions/action-types';
-import moment from "moment";
+import moment from 'moment';
 
 const initialState = {
   currentDate: moment(),

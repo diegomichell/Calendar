@@ -1,5 +1,5 @@
 import ACTION_TYPES from './action-types';
-import {Moment} from "moment";
+import {Moment} from 'moment';
 
 export default {
   setCurrentDate: (currentDate: Moment) => {

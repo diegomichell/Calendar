@@ -1,5 +1,5 @@
 import ACTION_TYPES from './action-types';
-import {CalendarEvent} from "../types";
+import {CalendarEvent} from '../types';
 
 export default {
   serviceCreateEvent: (event: CalendarEvent) => {
