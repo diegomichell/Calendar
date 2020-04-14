@@ -12,11 +12,13 @@ export default {
     });
 
     const {location, forecast: {forecastday}} = await r.json();
+    const latest = forecastday.length - 1;
+    const forecast = forecastday[latest];
     const weather: Weather = {
       name: location.name,
       condition: {
-        text: forecastday[0] ? forecastday[0].day.condition.text : 'No weather info',
-        icon: forecastday[0] ? forecastday[0].day.condition.icon : ''
+        text: forecast ? forecast.day.condition.text : 'No weather info',
+        icon: forecast ? forecast.day.condition.icon : ''
       }
     };
 
