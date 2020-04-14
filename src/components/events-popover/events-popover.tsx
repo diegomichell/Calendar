@@ -38,9 +38,9 @@ const EventsPopoverContent = ({dayOfMonth, month, year, showManageEvent, events,
             <small>{event.city} <MdLocationOn/></small>
             <br/>
             <small>
-              <a href="#" onClick={() => showManageEvent(event.date.month().toString(), event.date.date(), event.date.year().toString(), 'edit', event)}>Edit</a>
+              <Button variant="link" onClick={() => showManageEvent(event.date.month().toString(), event.date.date(), event.date.year().toString(), 'edit', event)}>Edit</Button>
               |
-              <a href="#" onClick={() => removeEvent(event)}>Remove</a>
+              <Button variant="link" onClick={() => removeEvent(event)}>Remove</Button>
             </small>
           </ListGroupItem>
         )

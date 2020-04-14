@@ -48,7 +48,7 @@ export function App({currentDate, setCurrentDate, hideManageEvent, showManageEve
             <div className="instructions">
               <h4 className="text-center text-success">Instructions</h4>
               <ul className="list-group list-unstyled text-center">
-                <li className="text-danger">👍🏻 Click on a day to add an event reminder</li>
+                <li className="text-danger"><span role="img" aria-label="thump up">👍🏻</span> Click on a day to add an event reminder</li>
               </ul>
             </div>
           </Col>
