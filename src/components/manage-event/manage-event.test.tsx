@@ -67,7 +67,7 @@ describe('ManageEvent component', () => {
     expect(create).toHaveBeenCalled();
   });
 
-  it('create event is called', () => {
+  it('event should be created', () => {
     const handleClose = jest.fn();
 
     const store = configureStore();
