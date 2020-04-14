@@ -74,7 +74,7 @@ export const ManageEvent = ({show, handleClose, create, update, dayOfMonth, mont
     <Modal className='manage-event' show={show} onHide={() => handleClose()}>
       <Modal.Header closeButton>
         <Modal.Title>{isEdit ? 'Edit' : 'Create'} event
-          for {moment().year(year).month(month).date(dayOfMonth).format('LL')}</Modal.Title>
+          for {moment().year(year).month(isEdit ? month + 1 : month).date(dayOfMonth).format('LL')}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Form ref={(ref: any) => {
