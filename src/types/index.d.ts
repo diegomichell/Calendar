@@ -5,5 +5,14 @@ export interface CalendarEvent {
     description: string,
     date: Moment,
     city: string,
-    color: string
+    color: string,
+    weather: Weather
+}
+
+export interface Weather {
+    name: string,
+    condition: {
+        text: string,
+        icon: string
+    }
 }

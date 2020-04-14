@@ -35,10 +35,19 @@ const EventsPopoverContent = ({dayOfMonth, month, year, showManageEvent, events,
               Event at {event.date.format('hh:mm a')}
             </span>
             <p>{event.description}</p>
+            {
+              event.weather && (
+                <div className="calendar-event-weather">
+                  <span>{event.weather.condition.text}</span>
+                  <img style={{height: '32px', width: '32px'}} src={event.weather.condition.icon} alt="weather icon"/>
+                </div>
+              )
+            }
             <small>{event.city} <MdLocationOn/></small>
             <br/>
             <small>
-              <Button variant='link' onClick={() => showManageEvent(event.date.month().toString(), event.date.date(), event.date.year().toString(), 'edit', event)}>Edit</Button>
+              <Button variant='link'
+                      onClick={() => showManageEvent(event.date.month().toString(), event.date.date(), event.date.year().toString(), 'edit', event)}>Edit</Button>
               |
               <Button variant='link' onClick={() => removeEvent(event)}>Remove</Button>
             </small>
