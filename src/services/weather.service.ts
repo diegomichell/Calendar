@@ -11,12 +11,12 @@ export default {
       }
     });
 
-    const {location, current} = await r.json();
+    const {location, forecast: {forecastday}} = await r.json();
     const weather: Weather = {
       name: location.name,
       condition: {
-        text: current.condition.text,
-        icon: current.condition.icon
+        text: forecastday[0] ? forecastday[0].day.condition.text : 'No weather info',
+        icon: forecastday[0] ? forecastday[0].day.condition.icon : ''
       }
     };
 
