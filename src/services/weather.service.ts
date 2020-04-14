@@ -1,6 +1,6 @@
 import {Weather} from "../types";
 
-const BASE_URL = 'http://api.weatherapi.com/v1';
+const BASE_URL = 'https://api.weatherapi.com/v1';
 
 export default {
   forecast: async (key: string, q: string, days: number) => {
