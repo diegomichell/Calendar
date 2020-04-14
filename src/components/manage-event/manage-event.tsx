@@ -19,12 +19,12 @@ interface ManageEventProps {
   month: number;
   year: number;
   mode: 'create' | 'edit';
-  selectedEvent: CalendarEvent;
+  selectedEvent?: CalendarEvent;
 }
 
 const DEFAULT_EVENT_COLOR = '#f44336';
 
-const ManageEvent = ({show, handleClose, create, update, dayOfMonth, month, year, mode, selectedEvent}: ManageEventProps) => {
+export const ManageEvent = ({show, handleClose, create, update, dayOfMonth, month, year, mode, selectedEvent}: ManageEventProps) => {
   const [validated, setValidated] = useState(false);
   const [color, setColor] = useState('');
   const isEdit = mode === 'edit';
@@ -49,7 +49,7 @@ const ManageEvent = ({show, handleClose, create, update, dayOfMonth, month, year
       const date = isEdit ? moment(formRef.elements['date'].value).hours(timeParts[0]).minutes(timeParts[1]).seconds(0) : moment().year(year).month(month).date(dayOfMonth).hours(timeParts[0]).minutes(timeParts[1]).seconds(0);
 
       isEdit ? update({
-          id: selectedEvent.id,
+          id: selectedEvent?.id,
           description,
           city,
           color,

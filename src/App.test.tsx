@@ -1,9 +1,21 @@
 import React from 'react';
-import { render } from '@testing-library/react';
-import App from './App';
+import {render} from '@testing-library/react';
+import moment from "moment";
+import {App} from './App';
 
-test('renders learn react link', () => {
-  const { getByText } = render(<App />);
-  const linkElement = getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
+
+describe('App component', () => {
+  it('renders app', () => {
+    const setCurrentDate = jest.fn();
+    const hideManageEvent = jest.fn();
+
+    const app = render(
+      <App currentDate={moment()}
+           manageEventMode="create" setCurrentDate={setCurrentDate}
+           hideManageEvent={hideManageEvent}
+      />
+    );
+
+    expect(app).not.toBeNull();
+  });
 });

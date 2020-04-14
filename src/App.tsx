@@ -14,8 +14,8 @@ interface AppProps {
   currentDate: Moment;
   setCurrentDate: (date: Moment) => void;
   hideManageEvent: () => void;
-  showManageEvent: boolean;
-  events: CalendarEvent[];
+  showManageEvent?: boolean;
+  events?: CalendarEvent[];
   manageEventMode: 'create' | 'edit';
 }
 
