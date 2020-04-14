@@ -6,19 +6,20 @@ import Calendar from "./components/calendar/calendar";
 import CalendarActions from "./actions/CalendarActions";
 import moment, {Moment} from "moment";
 import EventsPopover from "./components/events-popover/events-popover";
-import CreateEvent from "./components/manage-event/manage-event";
+import ManageEvent from "./components/manage-event/manage-event";
 import EventActions from "./actions/EventActions";
 import {CalendarEvent} from "./types";
 
 interface AppProps {
   currentDate: Moment;
   setCurrentDate: (date: Moment) => void;
-  hideCreateNewEvent: () => void;
-  showCreateEvent: boolean;
-  events: CalendarEvent[]
+  hideManageEvent: () => void;
+  showManageEvent: boolean;
+  events: CalendarEvent[];
+  manageEventMode: 'create' | 'edit';
 }
 
-export function App({currentDate, setCurrentDate, hideCreateNewEvent, showCreateEvent, events}: AppProps) {
+export function App({currentDate, setCurrentDate, hideManageEvent, showManageEvent, events, manageEventMode}: AppProps) {
   const onPrev = (showYearTable) => {
     setCurrentDate(moment({...currentDate}).subtract(1, showYearTable ? "year" : "month"));
   };
@@ -54,10 +55,10 @@ export function App({currentDate, setCurrentDate, hideCreateNewEvent, showCreate
         </Row>
         <Row>
           <Col md={{span: 4, offset: 4}}>
-            {showCreateEvent && <CreateEvent
-              mode="create"
-              handleClose={() => hideCreateNewEvent()}
-              show={showCreateEvent}
+            {showManageEvent && <ManageEvent
+              mode={manageEventMode}
+              handleClose={() => hideManageEvent()}
+              show={showManageEvent}
             />
             }
           </Col>
@@ -80,10 +81,11 @@ export function App({currentDate, setCurrentDate, hideCreateNewEvent, showCreate
   );
 }
 
-const mapStateToProps = ({calendar: {currentDate}, events: {showCreateEvent, events}}) => {
+const mapStateToProps = ({calendar: {currentDate}, events: {showManageEvent, events, manageEventMode}}) => {
   return {
     currentDate,
-    showCreateEvent,
+    showManageEvent,
+    manageEventMode,
     events: Object.values(events) as CalendarEvent[]
   }
 };
@@ -93,8 +95,8 @@ const mapDispatchToProp = (dispatch: Dispatch) => {
     setCurrentDate(date: Moment) {
       dispatch(CalendarActions.setCurrentDate(date));
     },
-    hideCreateNewEvent() {
-      dispatch(EventActions.hideCreateNewEvent());
+    hideManageEvent() {
+      dispatch(EventActions.hideManageEvent());
     }
   }
 };

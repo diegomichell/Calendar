@@ -2,10 +2,12 @@ import ACTION_TYPES from '../actions/action-types';
 
 const initialState = {
   events: {},
-  showCreateEvent: false,
+  showManageEvent: false,
+  manageEventMode: null,
   selectedMonth: null,
   selectedDay: null,
-  selectedYear: null
+  selectedYear: null,
+  selectedEvent: null
 };
 
 export default (state = initialState, action) => {
@@ -13,26 +15,30 @@ export default (state = initialState, action) => {
     case ACTION_TYPES.SET_EVENTS: {
       return {...state, events: {...action.payload.events}};
     }
-    case ACTION_TYPES.CREATE_EVENT: {
+    case ACTION_TYPES.UPDATE_EVENT:
+    case ACTION_TYPES.CREATE_EVENT:
       return {...state, events: {...state.events, [action.payload.event.id]: action.payload.event}};
-    }
-    case ACTION_TYPES.SHOW_CREATE_NEW_EVENT_MODAL: {
-      const {selectedMonth, selectedDay, selectedYear} = action.payload;
+    case ACTION_TYPES.SHOW_MANAGE_EVENT_MODAL: {
+      const {selectedMonth, selectedDay, selectedYear, manageEventMode, event} = action.payload;
       return {
         ...state,
-        showCreateEvent: true,
+        showManageEvent: true,
+        manageEventMode,
         selectedMonth,
         selectedDay,
-        selectedYear
+        selectedYear,
+        selectedEvent: event
       };
     }
-    case ACTION_TYPES.HIDE_CREATE_NEW_EVENT_MODAL: {
+    case ACTION_TYPES.HIDE_MANAGE_EVENT_MODAL: {
       return {
         ...state,
-        showCreateEvent: false,
+        showManageEvent: false,
+        manageEventMode: null,
         selectedMonth: null,
         selectedDay: null,
-        selectedYear: null
+        selectedYear: null,
+        selectedEvent: null
       };
     }
     case ACTION_TYPES.REMOVE_EVENTS: {

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {connect} from "react-redux";
 import {Dispatch} from 'redux';
 import {Button, Form, Modal} from "react-bootstrap";
@@ -10,7 +10,6 @@ import {CirclePicker} from 'react-color';
 
 import './manage-event.scss';
 
-
 interface ManageEventProps {
   show: boolean;
   handleClose: Function;
@@ -20,15 +19,20 @@ interface ManageEventProps {
   month: number;
   year: number;
   mode: 'create' | 'edit';
+  selectedEvent: CalendarEvent;
 }
 
 const DEFAULT_EVENT_COLOR = '#f44336';
 
-const ManageEvent = ({show, handleClose, create, update, dayOfMonth, month, year, mode}: ManageEventProps) => {
+const ManageEvent = ({show, handleClose, create, update, dayOfMonth, month, year, mode, selectedEvent}: ManageEventProps) => {
   const [validated, setValidated] = useState(false);
   const [color, setColor] = useState('');
   const isEdit = mode === 'edit';
   let formRef: any = null;
+
+  useEffect(() => {
+    selectedEvent && setColor(selectedEvent.color);
+  }, [selectedEvent]);
 
   const handleSubmit = (event?: any) => {
     if (event) {
@@ -42,9 +46,10 @@ const ManageEvent = ({show, handleClose, create, update, dayOfMonth, month, year
       const color = formRef.elements['color'].value || DEFAULT_EVENT_COLOR;
       const time = formRef.elements['time'].value;
       const timeParts = time.split(':').map(p => Number.parseInt(p));
-      const date = moment().year(year).month(month).date(dayOfMonth).hours(timeParts[0]).minutes(timeParts[1]).seconds(0);
+      const date = isEdit ? moment(formRef.elements['date'].value).hours(timeParts[0]).minutes(timeParts[1]).seconds(0) : moment().year(year).month(month).date(dayOfMonth).hours(timeParts[0]).minutes(timeParts[1]).seconds(0);
 
       isEdit ? update({
+          id: selectedEvent.id,
           description,
           city,
           color,
@@ -63,6 +68,8 @@ const ManageEvent = ({show, handleClose, create, update, dayOfMonth, month, year
     setValidated(true);
   };
 
+  const defaultDate = selectedEvent && moment(selectedEvent.date).date(selectedEvent.date.date());
+
   return (
     <Modal className="manage-event" show={show} onHide={() => handleClose()}>
       <Modal.Header closeButton>
@@ -75,21 +82,30 @@ const ManageEvent = ({show, handleClose, create, update, dayOfMonth, month, year
         }} noValidate validated={validated} onSubmit={handleSubmit}>
           <Form.Group controlId="formBasicDescription">
             <Form.Label>Description</Form.Label>
-            <Form.Control maxLength={30} required name="description" type="text" placeholder="Event description..."/>
+            <Form.Control defaultValue={selectedEvent && selectedEvent.description} maxLength={30} required
+                          name="description" type="text" placeholder="Event description..."/>
           </Form.Group>
+          {isEdit && (
+            <Form.Group controlId="formBasicDate">
+              <Form.Label>Date</Form.Label>
+              <Form.Control defaultValue={defaultDate && defaultDate.toISOString().substring(0, 10)} required
+                            name="date" type="date"/>
+            </Form.Group>
+          )}
           <Form.Group controlId="formBasicTime">
             <Form.Label>Time</Form.Label>
-            <Form.Control required name="time" type="time"/>
+            <Form.Control defaultValue={selectedEvent && selectedEvent.date.format('HH:mm')} required name="time"
+                          type="time"/>
           </Form.Group>
           <Form.Group controlId="formCity">
             <Form.Label>City</Form.Label>
-            <Form.Control required name="city" type="text"/>
+            <Form.Control defaultValue={selectedEvent && selectedEvent.city} required name="city" type="text"/>
           </Form.Group>
           <Form.Group controlId="formColor">
             <Form.Label>Color</Form.Label>
             <Form.Control value={color} name="color" type="hidden"/>
             <div className="color-picker">
-              <CirclePicker onChangeComplete={color => setColor(color.hex)}/>
+              <CirclePicker color={color} onChangeComplete={color => setColor(color.hex)}/>
             </div>
           </Form.Group>
         </Form>
@@ -101,18 +117,19 @@ const ManageEvent = ({show, handleClose, create, update, dayOfMonth, month, year
         <Button variant="primary" onClick={() => {
           handleSubmit();
         }}>
-          Create
+          Save
         </Button>
       </Modal.Footer>
     </Modal>
   );
 };
 
-const mapStateToProps = ({events: {selectedMonth, selectedDay, selectedYear}}) => {
+const mapStateToProps = ({events: {selectedMonth, selectedDay, selectedYear, selectedEvent}}) => {
   return {
     dayOfMonth: selectedDay,
     month: Number.parseInt(selectedMonth) - 1,
-    year: Number.parseInt(selectedYear)
+    year: Number.parseInt(selectedYear),
+    selectedEvent
   }
 };
 

@@ -13,6 +13,18 @@ export default {
       resolve(createdEvent)
     });
   },
+  updateEvent: (event: CalendarEvent): Promise<CalendarEvent> => {
+    return new Promise((resolve) => {
+      const updatedEvent = {...event};
+
+      const eventsData = localStorage.getItem('events');
+      let events = eventsData ? JSON.parse(eventsData) : {};
+      events = {...events, [updatedEvent.id]: updatedEvent};
+      localStorage.setItem('events', JSON.stringify(events));
+
+      resolve(updatedEvent)
+    });
+  },
   removeEvents: (eventsObject): Promise<void> => {
     return new Promise((resolve) => {
       const eventsData = localStorage.getItem('events');

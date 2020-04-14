@@ -8,7 +8,7 @@ import {MdLocationOn} from 'react-icons/md'
 
 import './events-popover.scss';
 
-const EventsPopoverContent = ({dayOfMonth, month, year, showCreateNewEvent, events, removeEventsForDay, removeEvent}) => {
+const EventsPopoverContent = ({dayOfMonth, month, year, showManageEvent, events, removeEventsForDay, removeEvent}) => {
   const eventsForDay = (events as CalendarEvent[] || []).filter(e => {
     return e.date.year() === Number.parseInt(year) && e.date.month() === (Number.parseInt(month) - 1) && e.date.date() === dayOfMonth;
   }).sort((a, b) => a.date > b.date ? 1 : -1);
@@ -16,7 +16,7 @@ const EventsPopoverContent = ({dayOfMonth, month, year, showCreateNewEvent, even
   return (
     <ListGroup className="EventsPopoverContent">
       <ListGroupItem>
-        <Button block size="sm" variant="success" onClick={() => showCreateNewEvent(month, dayOfMonth, year)}>
+        <Button block size="sm" variant="success" onClick={() => showManageEvent(month, dayOfMonth, year, 'create')}>
           New event
         </Button>
         {
@@ -38,7 +38,7 @@ const EventsPopoverContent = ({dayOfMonth, month, year, showCreateNewEvent, even
             <small>{event.city} <MdLocationOn/></small>
             <br/>
             <small>
-              <a href="#" onClick={() => removeEvent(event)}>Edit</a>
+              <a href="#" onClick={() => showManageEvent(event.date.month().toString(), event.date.date(), event.date.year().toString(), 'edit', event)}>Edit</a>
               |
               <a href="#" onClick={() => removeEvent(event)}>Remove</a>
             </small>
@@ -57,8 +57,8 @@ const mapStateToProps = ({events: {events}}) => {
 
 const mapDispatchToProp = (dispatch: Dispatch) => {
   return {
-    showCreateNewEvent(selectedMonth: number, selectedDay: number, selectedYear: number) {
-      dispatch(EventActions.showCreateNewEvent(selectedMonth, selectedDay, selectedYear));
+    showManageEvent(selectedMonth: number, selectedDay: number, selectedYear: number, mode: 'create' | 'edit', event?: CalendarEvent) {
+      dispatch(EventActions.showManageEvent(selectedMonth, selectedDay, selectedYear, mode, event));
     },
     removeEventsForDay(selectedMonth: number, selectedDay: number, selectedYear: number) {
       dispatch(EventActions.serviceRemoveEventsForDay(selectedMonth, selectedDay, selectedYear));

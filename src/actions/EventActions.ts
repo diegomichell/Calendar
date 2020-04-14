@@ -12,7 +12,7 @@ export default {
   },
   serviceUpdateEvent: (event: CalendarEvent) => {
     return {
-      type: ACTION_TYPES.SERVICE_CREATE_EVENT,
+      type: ACTION_TYPES.SERVICE_UPDATE_EVENT,
       payload: {
         event
       }
@@ -26,19 +26,29 @@ export default {
       }
     }
   },
-  showCreateNewEvent: (selectedMonth: number, selectedDay: number, selectedYear: number) => {
+  updateEvent: (event: CalendarEvent) => {
     return {
-      type: ACTION_TYPES.SHOW_CREATE_NEW_EVENT_MODAL,
+      type: ACTION_TYPES.UPDATE_EVENT,
       payload: {
-        selectedMonth,
-        selectedDay,
-        selectedYear
+        event
       }
     }
   },
-  hideCreateNewEvent: () => {
+  showManageEvent: (selectedMonth: number, selectedDay: number, selectedYear: number, manageEventMode: 'create' | 'edit', event?: CalendarEvent) => {
     return {
-      type: ACTION_TYPES.HIDE_CREATE_NEW_EVENT_MODAL,
+      type: ACTION_TYPES.SHOW_MANAGE_EVENT_MODAL,
+      payload: {
+        selectedMonth,
+        selectedDay,
+        selectedYear,
+        manageEventMode,
+        event
+      }
+    }
+  },
+  hideManageEvent: () => {
+    return {
+      type: ACTION_TYPES.HIDE_MANAGE_EVENT_MODAL,
       payload: {}
     }
   },
